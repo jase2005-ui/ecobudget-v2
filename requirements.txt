@@ -1,0 +1,106 @@
+# ─────────────────────────────────────────────────────────────
+#  EcoBudget — Requirements
+#  Last updated: May 2026
+# ─────────────────────────────────────────────────────────────
+#
+#  This project uses NO Composer packages and NO npm modules.
+#  All dependencies are either built into PHP or loaded via CDN.
+#  This file documents everything needed to run the application.
+# ─────────────────────────────────────────────────────────────
+
+
+# ── SERVER REQUIREMENTS ───────────────────────────────────────
+
+PHP          >= 8.0
+Web Server      Apache 2.4+ | Nginx 1.18+ | PHP Built-in Server
+
+
+# ── REQUIRED PHP EXTENSIONS ──────────────────────────────────
+#  Check active extensions with: php -m
+
+php-sqlite3     # SQLite database driver (PDO_SQLite)
+php-curl        # HTTP client for OpenAI API calls
+php-json        # JSON encode/decode (usually bundled)
+php-session     # Session handling (usually bundled)
+php-pdo         # PHP Data Objects base extension
+
+
+# ── VERIFY EXTENSIONS ARE ENABLED ────────────────────────────
+#  Run these commands to confirm:
+#
+#    php -m | grep -i sqlite
+#    php -m | grep -i curl
+#    php -m | grep -i pdo
+#
+#  On Ubuntu / Debian:
+#    sudo apt install php-sqlite3 php-curl
+#
+#  On CentOS / RHEL / Fedora:
+#    sudo yum install php-pdo php-sqlite php-curl
+#
+#  On macOS (Homebrew):
+#    brew install php
+#    (sqlite3 and curl are included by default)
+#
+#  On Windows (XAMPP):
+#    Open php.ini and uncomment:
+#      extension=sqlite3
+#      extension=pdo_sqlite
+#      extension=curl
+
+
+# ── FRONTEND DEPENDENCIES (CDN — no install needed) ──────────
+
+lucide-icons    0.383.0   https://unpkg.com/lucide@latest/dist/umd/lucide.min.js
+chart.js        4.4.0     https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js
+dm-sans-font    latest    https://fonts.googleapis.com/css2?family=DM+Sans
+dm-mono-font    latest    https://fonts.googleapis.com/css2?family=DM+Mono
+
+
+# ── EXTERNAL API (OPTIONAL) ───────────────────────────────────
+
+OpenAI API      gpt-3.5-turbo | gpt-4o
+#
+#  Required only for the AI Advisor and AI Monthly Summary.
+#  The app works fully without it — rule-based fallback responses
+#  are used automatically when no API key is configured.
+#
+#  Get a key at: https://platform.openai.com/api-keys
+#  Set it in:    config/config.php  →  define('OPENAI_API_KEY', 'sk-...')
+#
+#  Estimated usage cost: ~$0.01–$0.05 per conversation (GPT-3.5-turbo)
+
+
+# ── FILE SYSTEM PERMISSIONS ───────────────────────────────────
+#
+#  The following paths must be writable by the web server process:
+#
+#    data/            755   (directory — created automatically)
+#    data/ecobudget.db 644  (file — created automatically on first run)
+#
+#  Fix permission issues with:
+#    chmod 755 data/
+#    chown www-data:www-data data/      # Linux/Apache
+
+
+# ── BROWSER SUPPORT ───────────────────────────────────────────
+#
+#  Chrome  90+
+#  Firefox 88+
+#  Safari  14+
+#  Edge    90+
+#
+#  Requires JavaScript enabled.
+#  Requires internet access to load CDN assets (fonts, icons, charts).
+#  Can be adapted for offline use by downloading CDN assets locally.
+
+
+# ── RECOMMENDED FOR PRODUCTION ────────────────────────────────
+#
+#  - Move data/ecobudget.db outside the web root
+#  - Add  Deny from all  in data/.htaccess
+#  - Enable HTTPS (Let's Encrypt / Certbot)
+#  - Set session.cookie_secure = On  in php.ini
+#  - Set session.cookie_httponly = On  in php.ini
+#  - Delete setup.php after first run (it self-deletes automatically)
+#  - Rotate your OpenAI API key periodically
